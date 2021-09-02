@@ -1,0 +1,12 @@
+corpus_directory: "/mnt/d/Data/speech/benchmark_datasets/mm_mic_test/single_speaker"
+input_format: "MFA"
+dialect_code: "gam"
+unisyn_spade_directory: ""
+speaker_enrichment_file: ""
+vowel_prototypes_path: "/projects/spade/repo/git/spade-SantaBarbara/corpus-data/enrichment/vowel_prototypes.csv"
+speakers: []
+vowel_inventory: ["iː", "i", "ɔː", "ɔ", "ɝ", "aɪ", "ʊ", "ʌ", 'ɑː', 'ɑ', 'aʊ', 'oʊ', 'u', 'æ', 'eɪ', 'uː', 'ɔɪ', 'ɛ', 'ə', 'ɚ', 'ɪ']
+stressed_vowels: ["iː", "i", "ɔː", "ɔ", "ɝ", "aɪ", "ʊ", "ʌ", 'ɑː', 'ɑ', 'aʊ', 'oʊ', 'u', 'æ', 'eɪ', 'uː', 'ɛ', 'ɪ', 'ɔɪ']
+extra_syllabic_segments: ['n̩', 'm̩', 'l̩']
+sibilant_segments: ["s", "z", "ʃ", "ʒ"]
+pauses: '^<SIL>$'
