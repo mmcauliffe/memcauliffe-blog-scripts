@@ -393,7 +393,7 @@ def formant_acoustic_analysis(config, vowels, vowel_prototypes_path, ignored_spe
         save_performance_benchmark(config, 'formant_acoustic_analysis', time_taken)
 
 
-def pitch_acoustic_analysis(config, vowels, source='praat', ignored_speakers=None, subset="vowel", reset_pitch=False):
+def pitch_acoustic_analysis(config, source='praat', algorithm='base', reset_pitch=False):
     ## Function for performing the formant estimation and analysis.
     ## Input:
     ## - list of vowels to analyse
@@ -402,18 +402,6 @@ def pitch_acoustic_analysis(config, vowels, source='praat', ignored_speakers=Non
     ## - static (single point) formant and bandwith (F1-3, B1-3)
     ##   for vowel phones included in the corpus
     with CorpusContext(config) as c:
-        if vowels is not None:
-
-            ## Define the object of formant analysis:
-            ## phones in the list of vowels that are
-            ## greater than 50ms in duration
-            if ignored_speakers:
-                q = c.query_graph(c.phone).filter(c.phone.label.in_(vowels))
-                q = q.filter(c.phone.speaker.name.not_in_(ignored_speakers))
-                q = q.filter(c.phone.duration >= 0.05)
-                q.create_subset(subset)
-            else:
-                c.encode_class(vowels, subset)
 
         ## Check if formant estimation has already been completed
         ## for this corpus, and skip if so.
@@ -423,12 +411,8 @@ def pitch_acoustic_analysis(config, vowels, source='praat', ignored_speakers=Non
         c.reset_acoustic_measure('pitch')
         print('Beginning pitch analysis')
         beg = time.time()
-        time_taken = time.time() - beg
-        save_performance_benchmark(config, 'vowel_encoding', time_taken)
-        print('vowels encoded')
-        beg = time.time()
 
-        metadata = analyze_pitch(c, source=source, algorithm='base')
+        metadata = analyze_pitch(c, source=source, algorithm=algorithm)
         end = time.time()
         time_taken = time.time() - beg
         print('Analyzing pitch took: {}'.format(end - beg))

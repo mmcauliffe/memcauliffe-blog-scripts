@@ -56,6 +56,7 @@ ip = common.server_ip
 
 ## Define and process command line arguments
 
+algorithm_names = ['base', 'speaker_adjusted']
 source_names = ['praat', 'reaper']
 
 with ensure_local_database_running(corpus_name, port=common.server_port, ip=ip, token=common.load_token()) as params:
@@ -79,59 +80,56 @@ with ensure_local_database_running(corpus_name, port=common.server_port, ip=ip, 
     ## (within the SPADE corpus directory)
     ## Determine the class of phone labels to be used for formant analysis
     ## based on lists provided in the YAML file.
-    if corpus_conf['stressed_vowels']:
-        vowels_to_analyze = corpus_conf['stressed_vowels']
-    else:
-        vowels_to_analyze = corpus_conf['vowel_inventory']
     for pname in source_names:
-        csv_path = os.path.join(base_dir, corpus_name, 'base_{}_pitch.csv'.format(pname))
+        for aname in algorithm_names:
+            csv_path = os.path.join(base_dir, corpus_name, '{}_{}_pitch.csv'.format(aname, pname))
 
 
-        ## Perform formant estimation and analysis
-        ## see common.py for the details of this implementation
-        common.pitch_acoustic_analysis(config, vowels_to_analyze, source=pname, reset_pitch=True)
+            ## Perform formant estimation and analysis
+            ## see common.py for the details of this implementation
+            common.pitch_acoustic_analysis(config, source=pname, algorithm=aname, reset_pitch=True)
 
-        with CorpusContext(config) as c:
-            print('Beginning formant export')
-            beg = time.time()
-            ## Output the query (determined in common.py) as a CSV file
-            q = c.query_graph(c.word)
-            # q = q.filter(c.phone.subset == 'unisyn_subset')
+            with CorpusContext(config) as c:
+                print('Beginning pitch export')
+                beg = time.time()
+                ## Output the query (determined in common.py) as a CSV file
+                q = c.query_graph(c.word)
+                # q = q.filter(c.phone.subset == 'unisyn_subset')
 
-            #q = q.filter(c.phone.duration >= 0.05)
-            #q = q.filter(c.phone.label.in_(vowels_to_analyze))
-            print('Applied filters')
+                #q = q.filter(c.phone.duration >= 0.05)
+                #q = q.filter(c.phone.label.in_(vowels_to_analyze))
+                print('Applied filters')
 
-            ## Define the columns to be included in the query
-            ## Include the formant columns with 'relativised' time
-            ## (i.e., as % through the vowel, e.g., 5%, 10%, etc).
-            pitch_prop = c.word.pitch
-            pitch_prop.relative_time = True
-            pitch_track = pitch_prop.track
+                ## Define the columns to be included in the query
+                ## Include the formant columns with 'relativised' time
+                ## (i.e., as % through the vowel, e.g., 5%, 10%, etc).
+                pitch_prop = c.word.pitch
+                pitch_prop.relative_time = True
+                pitch_track = pitch_prop.track
 
-            ## Include columns for speaker and file metadata,
-            ## phone information (label, duration), surrounding
-            ## phonological environment, syllable information
-            ## (e.g., stress), word information, and speech rate
-            q = q.columns(c.word.speaker.name.column_name('speaker'),
-                          c.word.discourse.name.column_name('discourse'),
-                          c.word.label.column_name('word_label'),
-                          c.word.begin.column_name('word_begin'),
-                          c.word.end.column_name('word_end'),
-                          c.word.duration.column_name('word_duration'),
-                          c.word.utterance.speech_rate.column_name('speech_rate'),
-                          pitch_track)
+                ## Include columns for speaker and file metadata,
+                ## phone information (label, duration), surrounding
+                ## phonological environment, syllable information
+                ## (e.g., stress), word information, and speech rate
+                q = q.columns(c.word.speaker.name.column_name('speaker'),
+                              c.word.discourse.name.column_name('discourse'),
+                              c.word.label.column_name('word_label'),
+                              c.word.begin.column_name('word_begin'),
+                              c.word.end.column_name('word_end'),
+                              c.word.duration.column_name('word_duration'),
+                              c.word.utterance.speech_rate.column_name('speech_rate'),
+                              pitch_track)
 
 
 
-            ## Export the query
-            ## as a CSV
-            print("Writing CSV")
-            q.to_csv(csv_path)
-            end = time.time()
-            time_taken = time.time() - beg
-            print('Query took: {}'.format(end - beg))
-            print("Results for query written to {}".format(csv_path))
+                ## Export the query
+                ## as a CSV
+                print("Writing CSV")
+                q.to_csv(csv_path)
+                end = time.time()
+                time_taken = time.time() - beg
+                print('Query took: {}'.format(end - beg))
+                print("Results for query written to {}".format(csv_path))
 
     print('Finishing up!')
 
