@@ -106,7 +106,8 @@ for setup in train_setups:
 
 sys.path.insert(0, MFA_REPO_PATH)
 
-from montreal_forced_aligner.command_line.mfa import run_align_corpus, run_adapt_model, run_train_corpus, fix_path, unfix_path
+from montreal_forced_aligner.command_line.mfa import run_align_corpus, run_adapt_model, \
+    run_train_corpus, fix_path, unfix_path
 
 
 

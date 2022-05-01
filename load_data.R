@@ -6,10 +6,23 @@ benchmark_file = 'D:\\Data\\speech\\benchmark_datasets\\benchmark.csv'
 benchmark = read_csv(benchmark_file)
 benchmark <- subset(benchmark, Name != 'fave')
 
-benchmark$Name <- factor(benchmark$Name, levels = c('mfa_english', 'mfa_english_adapt', 'mfa_default_train', 
-                                                    'mfa_english_ipa', 'mfa_english_ipa_adapt', 'mfa_ipa_train', 'mfa_ipa_train_multilingual'),
-                         labels=c('MFA English',
-                                  'MFA English adapted','MFA default train', 'MFA English IPA','MFA English IPA adapted','MFA English IPA train','MFA English Multilingual IPA train'))
+benchmark$Name <- factor(benchmark$Name, levels = c('fave', 'maus', 
+                                                    'mfa_english', 'mfa_english_adapt', 'mfa_english_adapt_mapped', 
+                                                    'mfa_default_train', 
+                                                    'mfa_english_ipa', 'mfa_english_ipa_adapt', 'mfa_english_ipa_adapt_mapped',
+                                                    'mfa_ipa_train', 'mfa_ipa_train_multilingual', 
+                                                    'mfa_english_2', 'mfa_english_2_adapt', 'mfa_english_2_adapt_mapped', 
+                                                    'mfa_english_ipa_2','mfa_english_ipa_2_adapt', 'mfa_english_ipa_2_adapt_mapped',
+                                                    'mfa_english_ml_ipa_2', 'mfa_english_ml_ipa_2_adapt', 'mfa_english_ml_ipa_2_adapt_mapped'),
+                         
+                         labels=c('FAVE', 'MAUS', 
+                                  'MFA English','MFA English Adapted', 'MFA English Adapt Mapped', 
+                                  'MFA default train', 
+                                  'MFA English IPA','MFA English IPA Adapted', 'MFA English Multilingual IPA Adapt Mapped', 
+                                  'MFA English IPA train','MFA English Multilingual IPA train',
+                                  'MFA 2.0 English', 'MFA 2.0 English Adapted', 'MFA 2.0 English Adapt Mapped', 
+                                  'MFA 2.0 English IPA', 'MFA 2.0 English IPA Adapted',  'MFA 2.0 English IPA Adapt Mapped', 
+                                  'MFA 2.0 English Multilingual IPA', 'MFA 2.0 English Multilingual IPA Adapted', 'MFA 2.0 English Multilingual IPA Adapt Mapped'))
 benchmark$`Final log-likelihood` <- as.numeric(benchmark$`Final log-likelihood`)
 
 summary(benchmark)
@@ -18,10 +31,23 @@ csv_files = list.files(path=directory, pattern="*utterance_metrics.txt", full.na
 
 utterance_metrics = csv_files %>% map_dfr(read_csv)
 
-utterance_metrics$aligner <- factor(utterance_metrics$aligner, levels = c('fave', 'maus', 'mfa_english', 'mfa_english_adapt', 'mfa_default_train', 
-                                                                    'mfa_english_ipa', 'mfa_english_ipa_adapt', 'mfa_ipa_train', 'mfa_ipa_train_multilingual'),
-                                 labels=c('FAVE', 'MAUS', 'MFA English',
-                                          'MFA English adapted','MFA default train', 'MFA English IPA','MFA English IPA adapted','MFA English IPA train','MFA English Multilingual IPA train'))
+utterance_metrics$aligner <- factor(utterance_metrics$aligner, levels = c('fave', 'maus', 
+                                                                          'mfa_english', 'mfa_english_adapt', 'mfa_english_adapt_mapped', 
+                                                                          'mfa_default_train', 
+                                                                    'mfa_english_ipa', 'mfa_english_ipa_adapt', 'mfa_english_ipa_adapt_mapped',
+                                                                    'mfa_ipa_train', 'mfa_ipa_train_multilingual', 
+                                                                    'mfa_english_2', 'mfa_english_2_adapt', 'mfa_english_2_adapt_mapped', 
+                                                                    'mfa_english_ipa_2','mfa_english_ipa_2_adapt', 'mfa_english_ipa_2_adapt_mapped',
+                                                                    'mfa_english_ml_ipa_2', 'mfa_english_ml_ipa_2_adapt', 'mfa_english_ml_ipa_2_adapt_mapped'),
+                                    
+                                                               labels=c('FAVE', 'MAUS', 
+                                                                        'MFA English','MFA English Adapted', 'MFA English Adapt Mapped', 
+                                                                        'MFA default train', 
+                                                                        'MFA English IPA','MFA English IPA Adapted', 'MFA English Multilingual IPA Adapt Mapped', 
+                                                                        'MFA English IPA train','MFA English Multilingual IPA train',
+                                                                        'MFA 2.0 English', 'MFA 2.0 English Adapted', 'MFA 2.0 English Adapt Mapped', 
+                                                                        'MFA 2.0 English IPA', 'MFA 2.0 English IPA Adapted', 'MFA 2.0 English IPA Adapt Mapped', 
+                                                                        'MFA 2.0 English Multilingual IPA', 'MFA 2.0 English Multilingual IPA Adapted', 'MFA 2.0 English Multilingual IPA Adapt Mapped'))
 
 utterance_metrics$phone_boundary_error <- utterance_metrics$overlap_error /2
 
@@ -53,10 +79,23 @@ word_distances <- subset(word_distances, !(discourse == 's2401a' & reference_tim
 word_distances <- subset(word_distances, !(discourse == 's3301a' & reference_time > 28.2 & reference_time < 44.1))
 word_distances <- subset(word_distances, !(discourse == 's2903b' & reference_time > 518))
 
-word_distances$aligner <- factor(word_distances$aligner, levels = c('fave', 'maus', 'mfa_english', 'mfa_english_adapt', 'mfa_default_train', 
-                                                                    'mfa_english_ipa', 'mfa_english_ipa_adapt', 'mfa_ipa_train', 'mfa_ipa_train_multilingual'),
-                                 labels=c('FAVE', 'MAUS', 'MFA English',
-                                          'MFA English adapted','MFA default train', 'MFA English IPA','MFA English IPA adapted','MFA English IPA train','MFA English Multilingual IPA train'))
+word_distances$aligner <- factor(word_distances$aligner, levels = c('fave', 'maus', 
+                                                                    'mfa_english', 'mfa_english_adapt', 'mfa_english_adapt_mapped', 
+                                                                    'mfa_default_train', 
+                                                                    'mfa_english_ipa', 'mfa_english_ipa_adapt', 'mfa_english_ipa_adapt_mapped',
+                                                                    'mfa_ipa_train', 'mfa_ipa_train_multilingual', 
+                                                                    'mfa_english_2', 'mfa_english_2_adapt', 'mfa_english_2_adapt_mapped', 
+                                                                    'mfa_english_ipa_2','mfa_english_ipa_2_adapt', 'mfa_english_ipa_2_adapt_mapped',
+                                                                    'mfa_english_ml_ipa_2', 'mfa_english_ml_ipa_2_adapt', 'mfa_english_ml_ipa_2_adapt_mapped'),
+                                 
+                                 labels=c('FAVE', 'MAUS', 
+                                          'MFA English','MFA English Adapted', 'MFA English Adapt Mapped', 
+                                          'MFA default train', 
+                                          'MFA English IPA','MFA English IPA Adapted', 'MFA English Multilingual IPA Adapt Mapped', 
+                                          'MFA English IPA train','MFA English Multilingual IPA train',
+                                          'MFA 2.0 English', 'MFA 2.0 English Adapted', 'MFA 2.0 English Adapt Mapped', 
+                                          'MFA 2.0 English IPA', 'MFA 2.0 English IPA Adapted', 'MFA 2.0 English IPA Adapt Mapped', 
+                                          'MFA 2.0 English Multilingual IPA', 'MFA 2.0 English Multilingual IPA Adapted', 'MFA 2.0 English Multilingual IPA Adapt Mapped'))
 
 
 word_distances$distance <- abs(word_distances$distance)
@@ -68,10 +107,23 @@ phone_distances = csv_files %>% map_dfr(read_csv)
 
 phone_distances$distance <- abs(phone_distances$distance)
 
-phone_distances$aligner <- factor(phone_distances$aligner, levels = c('fave', 'maus', 'mfa_english', 'mfa_english_adapt', 'mfa_default_train', 
-                                                                    'mfa_english_ipa', 'mfa_english_ipa_adapt', 'mfa_ipa_train', 'mfa_ipa_train_multilingual'),
-                                  labels=c('FAVE', 'MAUS', 'MFA English',
-                                           'MFA English adapted','MFA default train', 'MFA English IPA','MFA English IPA adapted','MFA English IPA train','MFA English Multilingual IPA train'))
+phone_distances$aligner <- factor(phone_distances$aligner, levels = c('fave', 'maus', 
+                                                                      'mfa_english', 'mfa_english_adapt', 'mfa_english_adapt_mapped', 
+                                                                      'mfa_default_train', 
+                                                                      'mfa_english_ipa', 'mfa_english_ipa_adapt', 'mfa_english_ipa_adapt_mapped',
+                                                                      'mfa_ipa_train', 'mfa_ipa_train_multilingual', 
+                                                                      'mfa_english_2', 'mfa_english_2_adapt', 'mfa_english_2_adapt_mapped', 
+                                                                      'mfa_english_ipa_2','mfa_english_ipa_2_adapt', 'mfa_english_ipa_2_adapt_mapped',
+                                                                      'mfa_english_ml_ipa_2', 'mfa_english_ml_ipa_2_adapt', 'mfa_english_ml_ipa_2_adapt_mapped'),
+                                  
+                                  labels=c('FAVE', 'MAUS', 
+                                           'MFA English','MFA English Adapted', 'MFA English Adapt Mapped', 
+                                           'MFA default train', 
+                                           'MFA English IPA','MFA English IPA Adapted', 'MFA English Multilingual IPA Adapt Mapped', 
+                                           'MFA English IPA train','MFA English Multilingual IPA train',
+                                           'MFA 2.0 English', 'MFA 2.0 English Adapted', 'MFA 2.0 English Adapt Mapped', 
+                                           'MFA 2.0 English IPA', 'MFA 2.0 English IPA Adapted', 'MFA 2.0 English IPA Adapt Mapped', 
+                                           'MFA 2.0 English Multilingual IPA', 'MFA 2.0 English Multilingual IPA Adapted', 'MFA 2.0 English Multilingual IPA Adapt Mapped'))
 
 phone_distances$type <- factor(phone_distances$type, levels=c('initialc', 'cv', 'vc', 'finalc'), labels=c('Initial C', 'CV transition', 'VC transition', 'Final C'))
 

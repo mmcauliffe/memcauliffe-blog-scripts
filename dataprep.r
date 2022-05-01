@@ -9,17 +9,52 @@ library(tidyverse)
 library(fs)
 library(purrr)
 library(svglite)
+library(seewave)
+library(gganimate)
+library(transformr)
+library(magick)
+library(rsvg)
+library(gifski)
+library(cowplot)
+library(gsignal)
+library(colorspace)
+library(tidyr)
+library(dplyr)
+library(stringr)
 
 blog_width = 2400
 blog_height =1000
 blog_dpi = 175
 
 windowsFonts("OpenSans" = windowsFont("OpenSans"))
-aligners = c('fave', 'maus', 'mfa_default_train', 'mfa_ipat_train', 'mfa_enlish_adapt', 'mfa_enlish', 'mfa_english_ipa', 'mfa_english_ipa_adapt')
+aligners = c('fave', 'maus', 'mfa_default_train', 'mfa_ipa_train', 'mfa_enlish_adapt', 'mfa_enlish', 'mfa_english_ipa', 'mfa_english_ipa_adapt')
 
 directory = 'D:\\Data\\speech\\benchmark_datasets\\buckeye\\accuracy_data'
 
 cbbPalette <- c("#FB5607", "#8338EC", "#FF006E", "#FFBE0B",  "#3A86FF", '#6EC200', '#BA3200')
+
+
+very_light_yellow = '#FFE819'
+light_yellow = '#F9D213'
+base_yellow = '#F2BC0C'
+dark_yellow = '#BD9105'
+very_dark_yellow = '#A07A00'
+
+sky_blue = '#2D99FF'
+
+very_light_blue = '#1265B2'
+light_blue = '#0A4B89'
+base_blue = '#053561'
+dark_blue = '#01192F'
+very_dark_blue = '#000C17'
+
+
+very_light_red = '#FF4619'
+light_red = '#D43610'
+base_red = '#AA2809'
+dark_red = '#761A03'
+very_dark_red = '#5C1200'
+
 theme_memcauliffe <- function () { 
   base_size = 12
   half_line <- base_size/2

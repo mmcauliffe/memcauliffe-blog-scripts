@@ -9,6 +9,7 @@ import statistics
 import re
 import multiprocessing as mp
 from datetime import datetime
+from argparse import Namespace
 
 host = socket.gethostname()
 
@@ -41,7 +42,7 @@ if not os.path.exists(benchmark_path):
         writer.writeheader()
 
 
-class AlignDummyArgs(object):
+class AlignDummyArgs(Namespace):
     def __init__(self):
         self.num_jobs = 12
         self.speaker_characters = 0
@@ -55,24 +56,32 @@ class AlignDummyArgs(object):
         self.output_directory = None
         self.config_path = None
         self.audio_directory = None
+        self.disable_mp = False
+        self.overwrite = True
+        self.disable_textgrid_cleanup = False
 
 
-class AdaptDummyArgs(object):
+class AdaptDummyArgs(Namespace):
     def __init__(self):
         self.num_jobs = 12
         self.speaker_characters = 0
         self.verbose = False
         self.clean = not DEBUG_MODE
         self.debug = False
+        self.full_train = False
         self.corpus_directory = corpus_dir
         self.output_model_path = None
+        self.output_directory = None
         self.dictionary_path = 'english'
         self.temp_directory = temp_dir
         self.config_path = None
         self.audio_directory = None
+        self.disable_mp = False
+        self.overwrite = True
+        self.disable_textgrid_cleanup = False
 
 
-class TrainDummyArgs(object):
+class TrainDummyArgs(Namespace):
     def __init__(self):
         self.num_jobs = 12
         self.speaker_characters = 0
@@ -86,11 +95,17 @@ class TrainDummyArgs(object):
         self.output_model_path = None
         self.config_path = None
         self.audio_directory = None
+        self.disable_mp = False
+        self.overwrite = True
+        self.disable_textgrid_cleanup = False
 
 
 align_setups = [
     {'identifier': 'mfa_english_ipa', 'acoustic_model_path': r"D:\Data\speech\english_ipa.zip", 'dictionary_path': r"D:\Data\speech\esports\esports_dict.txt"},
     {'identifier': 'mfa_english', 'acoustic_model_path': 'english', 'dictionary_path': 'english'},
+{'identifier': 'mfa_english_2', 'acoustic_model_path': r'D:\Data\speech\english_2.zip', 'dictionary_path': 'english'},
+{'identifier': 'mfa_english_ipa_2', 'acoustic_model_path': r'D:\Data\speech\english_ipa_2.zip', 'dictionary_path': r"D:\Data\speech\esports\esports_dict.txt"},
+{'identifier': 'mfa_english_ml_ipa_2', 'acoustic_model_path': r'D:\Data\speech\english_ml_ipa_2.zip', 'dictionary_path': r"D:\Data\speech\esports\esports_dict.txt"},
 ]
 
 align_args = []
@@ -117,8 +132,58 @@ for setup in train_setups:
 
 
 adapt_setups = [
-    {'identifier': 'mfa_english_adapt', 'acoustic_model_path': 'english', 'dictionary_path': 'english'},
-    {'identifier': 'mfa_english_ipa_adapt', 'acoustic_model_path': r'D:\Data\speech\english_ipa.zip', 'dictionary_path': r'D:\Data\speech\esports\esports_dict.txt'},
+    {
+        'identifier': 'mfa_english_adapt',
+        'acoustic_model_path': 'english',
+        'full_train': True,
+        'dictionary_path': 'english'},
+    {
+        'identifier': 'mfa_english_2_adapt',
+        'acoustic_model_path': r'D:\Data\speech\english_2.zip',
+        'full_train': True,
+        'dictionary_path': 'english'},
+    {
+        'identifier': 'mfa_english_ipa_2_adapt',
+        'acoustic_model_path': r'D:\Data\speech\english_ipa_2.zip',
+        'full_train': True,
+        'dictionary_path': r"D:\Data\speech\esports\esports_dict.txt"},
+    {
+        'identifier': 'mfa_english_ipa_adapt',
+        'acoustic_model_path': r'D:\Data\speech\english_ipa.zip',
+        'full_train': True,
+        'dictionary_path': r'D:\Data\speech\esports\esports_dict.txt'},
+    {
+        'identifier': 'mfa_english_ml_ipa_2_adapt',
+        'acoustic_model_path': r'D:\Data\speech\english_ml_ipa_2.zip',
+        'full_train': True,
+        'dictionary_path': r'D:\Data\speech\esports\esports_dict.txt'
+    },
+    {
+        'identifier': 'mfa_english_adapt_mapped',
+        'acoustic_model_path': 'english',
+        'full_train': False,
+        'dictionary_path': 'english'},
+    {
+        'identifier': 'mfa_english_2_adapt_mapped',
+        'acoustic_model_path': r'D:\Data\speech\english_2.zip',
+        'full_train': False,
+        'dictionary_path': 'english'},
+    {
+        'identifier': 'mfa_english_ipa_2_adapt_mapped',
+        'acoustic_model_path': r'D:\Data\speech\english_ipa_2.zip',
+        'full_train': False,
+        'dictionary_path': r"D:\Data\speech\esports\esports_dict.txt"},
+    {
+        'identifier': 'mfa_english_ipa_adapt_mapped',
+        'acoustic_model_path': r'D:\Data\speech\english_ipa.zip',
+        'full_train': False,
+        'dictionary_path': r'D:\Data\speech\esports\esports_dict.txt'},
+    {
+        'identifier': 'mfa_english_ml_ipa_2_adapt_mapped',
+        'acoustic_model_path': r'D:\Data\speech\english_ml_ipa_2.zip',
+        'full_train': False,
+        'dictionary_path': r'D:\Data\speech\esports\esports_dict.txt'
+    },
 ]
 
 adapt_args = []
@@ -126,6 +191,7 @@ for setup in adapt_setups:
     adapt_a = AdaptDummyArgs()
     adapt_a.acoustic_model_path = setup['acoustic_model_path']
     adapt_a.dictionary_path = setup['dictionary_path']
+    adapt_a.full_train = setup['full_train']
     adapt_a.output_model_path = os.path.join(output_directory, setup['identifier'] + '_adapted.zip')
     a = AlignDummyArgs()
     a.acoustic_model_path = adapt_a.output_model_path
